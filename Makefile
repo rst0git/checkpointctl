@@ -109,3 +109,4 @@ help:
 	@echo " * help - show help"
 
 .PHONY: clean install uninstall release lint golang-lint shellcheck vendor test help check-go-version test-junit
+
