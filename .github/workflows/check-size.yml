@@ -12,10 +12,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
+        # Fetch all history for all branches and tags.
         # Needed to rebase against the base branch
         fetch-depth: 0
-        # Checkout pull request HEAD commit instead of merge commit
-        ref: ${{ github.event.pull_request.head.sha }}
+        # Checkout SHA (commit hash) of the base branch of a pull request
+        ref: ${{ github.event.pull_request.base.sha }}
     - name: Configure git user details
       run: |
         git config --global user.email "checkpoint-restore@users.noreply.github.com"
