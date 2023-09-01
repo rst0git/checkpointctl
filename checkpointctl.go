@@ -4,11 +4,14 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 )
 
 var (
@@ -27,7 +30,7 @@ var (
 	showAll        bool
 )
 
-func main() {
+func NewCommand() *cobra.Command {
 	rootCommand := &cobra.Command{
 		Use:   name,
 		Short: name + " is a tool to read and manipulate checkpoint archives",
@@ -46,10 +49,31 @@ func main() {
 	rootCommand.AddCommand(memparseCommand)
 
 	rootCommand.Version = version
+	return rootCommand
+}
 
+func main() {
+	if len(os.Args) == 3 && os.Args[1] == "man" {
+		genManPages()
+		os.Exit(0)
+	}
+	rootCommand := NewCommand()
 	if err := rootCommand.Execute(); err != nil {
 		os.Exit(1)
 	}
+}
+
+func genManPages() {
+	cmd := NewCommand()
+	header := &doc.GenManHeader{
+		Title:   strings.ToUpper(name),
+		Section: "1",
+	}
+	err := doc.GenManTree(cmd, header, os.Args[2])
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
 
 func setupShow() *cobra.Command {
