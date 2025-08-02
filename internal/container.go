@@ -13,12 +13,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"text/tabwriter"
 	"time"
 
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
 	"github.com/checkpoint-restore/go-criu/v7/crit"
 	"github.com/containers/storage/pkg/archive"
-	"github.com/olekukonko/tablewriter"
 	spec "github.com/opencontainers/runtime-spec/specs-go"
 )
 
@@ -107,7 +107,8 @@ func getCheckpointInfo(task Task) (*checkpointInfo, error) {
 }
 
 func ShowContainerCheckpoints(tasks []Task) error {
-	table := tablewriter.NewWriter(os.Stdout)
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+
 	header := []string{
 		"Container",
 		"Image",
@@ -120,6 +121,8 @@ func ShowContainerCheckpoints(tasks []Task) error {
 	if len(tasks) > 1 {
 		header = append(header, "IP", "MAC", "CHKPT Size", "Root Fs Diff Size")
 	}
+
+	var rows [][]string
 
 	for _, task := range tasks {
 		info, err := getCheckpointInfo(task)
@@ -167,14 +170,13 @@ func ShowContainerCheckpoints(tasks []Task) error {
 			row = append(row, metadata.ByteToString(info.archiveSizes.rootFsDiffTarSize))
 		}
 
-		table.Append(row)
+		rows = append(rows, row)
 	}
 
-	table.SetHeader(header)
-	table.SetAutoMergeCells(false)
-	table.SetRowLine(true)
-	table.Render()
+	WriteTableHeader(w, header)
+	WriteTableRows(w, rows)
 
+	w.Flush()
 	return nil
 }
 

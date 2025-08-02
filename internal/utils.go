@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"text/tabwriter"
 	"time"
 
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
@@ -80,5 +81,39 @@ func CleanupTasks(tasks []Task) {
 		if err := os.RemoveAll(task.OutputDir); err != nil {
 			fmt.Fprintln(os.Stderr, err)
 		}
+	}
+}
+
+// WriteTableHeader writes the header row and separator line for a table
+func WriteTableHeader(w *tabwriter.Writer, header []string) {
+	// Print header
+	for i, h := range header {
+		if i > 0 {
+			fmt.Fprint(w, "\t")
+		}
+		fmt.Fprint(w, h)
+	}
+	fmt.Fprintln(w)
+
+	// Print separator line
+	for i := range header {
+		if i > 0 {
+			fmt.Fprint(w, "\t")
+		}
+		fmt.Fprint(w, strings.Repeat("-", len(header[i])))
+	}
+	fmt.Fprintln(w)
+}
+
+// WriteTableRows writes the data rows for a table
+func WriteTableRows(w *tabwriter.Writer, rows [][]string) {
+	for _, row := range rows {
+		for i, cell := range row {
+			if i > 0 {
+				fmt.Fprint(w, "\t")
+			}
+			fmt.Fprint(w, cell)
+		}
+		fmt.Fprintln(w)
 	}
 }

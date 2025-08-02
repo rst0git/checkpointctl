@@ -9,10 +9,10 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"text/tabwriter"
 	"time"
 
 	"github.com/checkpoint-restore/checkpointctl/internal"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 )
 
@@ -38,7 +38,7 @@ func list(cmd *cobra.Command, args []string) error {
 	}()
 	showTable := false
 
-	table := tablewriter.NewWriter(os.Stdout)
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
 	header := []string{
 		"Namespace",
 		"Pod",
@@ -48,9 +48,7 @@ func list(cmd *cobra.Command, args []string) error {
 		"Checkpoint Name",
 	}
 
-	table.SetHeader(header)
-	table.SetAutoMergeCells(false)
-	table.SetRowLine(true)
+	var rows [][]string
 
 	for _, checkpointPath := range allPaths {
 		files, err := filepath.Glob(filepath.Join(checkpointPath, "checkpoint-*"))
@@ -81,7 +79,7 @@ func list(cmd *cobra.Command, args []string) error {
 				filepath.Base(file),
 			}
 
-			table.Append(row)
+			rows = append(rows, row)
 		}
 	}
 
@@ -90,6 +88,9 @@ func list(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
-	table.Render()
+	internal.WriteTableHeader(w, header)
+	internal.WriteTableRows(w, rows)
+
+	w.Flush()
 	return nil
 }
