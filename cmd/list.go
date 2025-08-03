@@ -9,7 +9,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"text/tabwriter"
 	"time"
 
 	"github.com/checkpoint-restore/checkpointctl/internal"
@@ -38,7 +37,7 @@ func list(cmd *cobra.Command, args []string) error {
 	}()
 	showTable := false
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	w := internal.GetNewTabWriter(os.Stdout)
 	header := []string{
 		"Namespace",
 		"Pod",

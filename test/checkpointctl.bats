@@ -167,7 +167,7 @@ function teardown() {
 	( cd "$TEST_TMP_DIR1" && tar cf "$TEST_TMP_DIR2"/test.tar . )
 	checkpointctl show "$TEST_TMP_DIR2"/test.tar
 	[ "$status" -eq 0 ]
-	[[ ${lines[1]} == *"Root Fs Diff Size"* ]]
+	[[ ${lines[1]} == *"ROOT FS DIFF SIZE"* ]]
 }
 
 @test "Run checkpointctl show with multiple tar files" {

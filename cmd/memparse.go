@@ -10,7 +10,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"text/tabwriter"
 
 	"github.com/checkpoint-restore/checkpointctl/internal"
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
@@ -164,7 +163,7 @@ func showProcessMemorySizeTables(tasks []internal.Task) error {
 	}
 
 	for _, task := range tasks {
-		w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+		w := internal.GetNewTabWriter(os.Stdout)
 		var rows [][]string
 
 		c := crit.New(nil, nil, filepath.Join(task.OutputDir, "checkpoint"), false, false)
@@ -348,7 +347,7 @@ func printMemorySearchResultForPID(task internal.Task) error {
 		return nil
 	}
 
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	w := internal.GetNewTabWriter(os.Stdout)
 	header := []string{"Address", "Match", "Instance"}
 
 	internal.WriteTableHeader(w, header)

@@ -13,7 +13,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"text/tabwriter"
 	"time"
 
 	metadata "github.com/checkpoint-restore/checkpointctl/lib"
@@ -107,7 +106,7 @@ func getCheckpointInfo(task Task) (*checkpointInfo, error) {
 }
 
 func ShowContainerCheckpoints(tasks []Task) error {
-	w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+	w := GetNewTabWriter(os.Stdout)
 
 	header := []string{
 		"Container",
