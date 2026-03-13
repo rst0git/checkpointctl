@@ -30,11 +30,11 @@ To display an overview of a checkpoint archive you can just use
 ```console
 $ checkpointctl show /tmp/dump.tar
 
-Displaying container checkpoint data from /root/dump.tar
+Displaying container checkpoint data from /tmp/dump.tar
 
-CONTAINER  IMAGE                             ID            RUNTIME  CREATED               ENGINE  CHKPT SIZE ROOT FS DIFF SIZE
----------  -----                             --            -------  -------               ------  ---------- -----------------
-looper     docker.io/library/busybox:latest  8b5c2ca15082  crun     2021-09-28T10:03:56Z  Podman  130.8 KiB  204 B
+CONTAINER   IMAGE                              ID             RUNTIME   CREATED                ENGINE   CHKPT SIZE   ROOT FS DIFF SIZE
+---------   -----                              --             -------   -------                ------   ----------   -----------------
+looper      docker.io/library/busybox:latest   8b5c2ca15082   crun      2021-09-28T10:03:56Z   Podman   130.8 KiB    204 B
 ```
 
 For a checkpoint archive created by Kubernetes with *CRI-O* the output would
@@ -45,10 +45,9 @@ $ checkpointctl show /var/lib/kubelet/checkpoints/checkpoint-counters_default-co
 
 Displaying container checkpoint data from /var/lib/kubelet/checkpoints/checkpoint-counters_default-counter-2025-05-22T14:31:35Z.tar
 
-CONTAINER  IMAGE                               ID            RUNTIME  CREATED                         ENGINE  IP         CHKPT SIZE  ROOT FS DIFF SIZE
----------  -----                               --            -------  -------                         ------  --         ----------  -----------------
-counter    quay.io/adrianreber/counter:latest  29ed106ef467  runc     2025-05-22T14:31:24.818422898Z  CRI-O   10.0.0.70  9.2 MiB     2.0 KiB
-
+CONTAINER   IMAGE                               ID             RUNTIME   CREATED                         ENGINE   CHKPT SIZE   ROOT FS DIFF SIZE
+---------   -----                               --             -------   -------                         ------   ----------   -----------------
+counter     quay.io/adrianreber/counter:latest   29ed106ef467   runc      2025-05-22T14:31:24.818422898Z  CRI-O    9.2 MiB      2.0 KiB
 ```
 
 ### `inspect` sub-command
@@ -64,6 +63,11 @@ awesome_booth
 ├── Runtime: crun
 ├── Created: 2023-03-08T08:45:33+03:00
 ├── Engine: Podman
+├── Network Interfaces
+│   └── podman (eth0)
+│       ├── IP: 10.88.0.5/16
+│       ├── MAC: a2:c4:e6:8f:1a:3b
+│       └── Gateway: 10.88.0.1
 ├── Checkpoint size: 2.8 MiB
 ├── Root FS diff size: 309.0 KiB
 ├── Metadata
